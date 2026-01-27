@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="SD Card Driver."><title>phytium_mci::mci_host::sd - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-069232aa.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="phytium_mci" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (898aff704 2025-08-14)" data-channel="nightly" data-search-js="search-281b7574.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-68b7e25d.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../../static.files/main-eebb9057.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../../phytium_mci/index.html">phytium_<wbr>mci</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module sd</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#supported-card-types" title="Supported Card Types">Supported Card Types</a></li><li><a href="#features" title="Features">Features</a></li><li><a href="#card-information" title="Card Information">Card Information</a></li><li><a href="#example" title="Example">Example</a></li></ul><h3><a href="#structs">Module Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="../index.html">In phytium_<wbr>mci::<wbr>mci_<wbr>host</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../../index.html">phytium_mci</a>::<wbr><a href="../index.html">mci_host</a></div><h1>Module <span>sd</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../../src/phytium_mci/mci_host/sd/mod.rs.html#1-2344">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>SD Card Driver.</p>
+<p>This module provides a high-level driver for SD memory cards, implementing
+the SD specification (versions 1.0-3.0). It supports SDSC, SDHC, and SDXC
+cards with various bus widths and transfer modes.</p>
+<h2 id="supported-card-types"><a class="doc-anchor" href="#supported-card-types">§</a>Supported Card Types</h2>
+<ul>
+<li><strong>SDSC</strong> (Standard Capacity SD Card): ≤ 2GB</li>
+<li><strong>SDHC</strong> (High Capacity SD Card): 2GB - 32GB</li>
+<li><strong>SDXC</strong> (Extended Capacity SD Card): 32GB - 2TB</li>
+</ul>
+<h2 id="features"><a class="doc-anchor" href="#features">§</a>Features</h2>
+<ul>
+<li><strong>Bus Widths</strong>: 1-bit and 4-bit data bus</li>
+<li><strong>Voltage</strong>: 3.3V (default) and 1.8V (UHS-I)</li>
+<li><strong>Speed Modes</strong>: Default, High Speed, SDR12, SDR25, SDR50, SDR104</li>
+<li><strong>Transfer Modes</strong>: DMA and PIO</li>
+<li><strong>Card Detection</strong>: Automatic card detection</li>
+<li><strong>Write Protection</strong>: Card-level write protection support</li>
+</ul>
+<h2 id="card-information"><a class="doc-anchor" href="#card-information">§</a>Card Information</h2>
+<p>The driver reads and provides access to:</p>
+<ul>
+<li><strong>CID</strong> (Card Identification): Manufacturer, product name, serial number</li>
+<li><strong>CSD</strong> (Card Specific Data): Capacity, block size, speed class</li>
+<li><strong>SCR</strong> (SD Configuration Register): SD version, bus width support</li>
+<li><strong>SSR</strong> (SD Status): Card status information</li>
+</ul>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>phytium_mci::sd::SdCard;
+<span class="kw">use </span>phytium_mci::IoPad;
+<span class="kw">use </span>core::ptr::NonNull;
+
+<span class="comment">// Create IOPAD instance
+</span><span class="kw">let </span>iopad = <span class="kw">unsafe </span>{ IoPad::new(NonNull::new_unchecked(<span class="number">0x2800_0000 </span><span class="kw">as </span><span class="kw-2">*mut </span>u8)) };
+
+<span class="comment">// Create SD card instance
+</span><span class="kw">let </span><span class="kw-2">mut </span>sdcard = <span class="kw">unsafe </span>{
+    SdCard::new(
+        NonNull::new_unchecked(<span class="number">0x2800_1000 </span><span class="kw">as </span><span class="kw-2">*mut </span>u8),
+        iopad
+    )
+};
+
+<span class="comment">// Initialize the card
+</span>sdcard.init(NonNull::new_unchecked(<span class="number">0x2800_1000 </span><span class="kw">as </span><span class="kw-2">*mut </span>u8))<span class="question-mark">?</span>;
+
+<span class="comment">// Read blocks
+</span><span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::new();
+sdcard.read_blocks(<span class="kw-2">&amp;mut </span>buffer, <span class="number">0</span>, <span class="number">1</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// Get card information
+</span><span class="macro">println!</span>(<span class="string">"Capacity: {} MB"</span>, sdcard.capacity() / (<span class="number">1024 </span>* <span class="number">1024</span>));
+<span class="macro">println!</span>(<span class="string">"Block size: {} bytes"</span>, sdcard.block_size());
+<span class="macro">println!</span>(<span class="string">"Block count: {}"</span>, sdcard.block_count());</code></pre></div>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.SdCard.html" title="struct phytium_mci::mci_host::sd::SdCard">SdCard</a></dt><dd>SD Card driver.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.init_reg_base.html" title="fn phytium_mci::mci_host::sd::init_reg_base">init_<wbr>reg_<wbr>base</a></dt><dd>Initialize the global register base address.</dd><dt><a class="fn" href="fn.reg_base.html" title="fn phytium_mci::mci_host::sd::reg_base">reg_<wbr>base</a></dt><dd>Get the global register base address.</dd></dl></section></div></main></body></html>

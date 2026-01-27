@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Register a platform-specific implementation of the `Kernel` trait."><title>set_impl in phytium_mci - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-069232aa.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="phytium_mci" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (898aff704 2025-08-14)" data-channel="nightly" data-search-js="search-281b7574.js" data-settings-js="settings-5514c975.js" ><script src="../static.files/storage-68b7e25d.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-eebb9057.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../phytium_mci/index.html">phytium_<wbr>mci</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">set_<wbr>impl</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li><li><a href="#generated-functions" title="Generated Functions">Generated Functions</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate phytium_<wbr>mci</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="index.html">phytium_mci</a></div><h1>Macro <span class="macro">set_impl</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/phytium_mci/lib.rs.html#303-323">Source</a> </span></div><pre class="rust item-decl"><code>macro_rules! set_impl {
+    ($t: ty) =&gt; { ... };
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Register a platform-specific implementation of the <a href="trait.Kernel.html" title="trait phytium_mci::Kernel"><code>Kernel</code></a> trait.</p>
+<p>This macro generates the external interface functions that the phytium-mci
+driver uses to call platform-specific operations. It should be called once
+with your platform type that implements the <a href="trait.Kernel.html" title="trait phytium_mci::Kernel"><code>Kernel</code></a> trait.</p>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>phytium_mci::{Kernel, set_impl};
+<span class="kw">use </span>core::{ptr::NonNull, time::Duration};
+
+<span class="kw">struct </span>MyPlatform;
+
+<span class="kw">impl </span>Kernel <span class="kw">for </span>MyPlatform {
+    <span class="kw">fn </span>sleep(duration: Duration) {
+        <span class="comment">// Your implementation
+    </span>}
+
+    <span class="attr">#[cfg(feature = <span class="string">"dma"</span>)]
+    </span><span class="kw">fn </span>mmap(virt_addr: NonNull&lt;u8&gt;) -&gt; u64 {
+        <span class="comment">// Your implementation
+    </span>}
+
+    <span class="kw">fn </span>flush(addr: NonNull&lt;u8&gt;, size: usize) {
+        <span class="comment">// Your implementation
+    </span>}
+
+    <span class="kw">fn </span>invalidate(addr: NonNull&lt;u8&gt;, size: usize) {
+        <span class="comment">// Your implementation
+    </span>}
+}
+
+<span class="comment">// Register the implementation
+</span><span class="macro">set_impl!</span>(MyPlatform);</code></pre></div>
+<h2 id="generated-functions"><a class="doc-anchor" href="#generated-functions">§</a>Generated Functions</h2>
+<p>This macro generates the following <code>no_mangle</code> functions:</p>
+<ul>
+<li><code>_phytium_mci_sleep</code> - Sleep/delay functionality</li>
+<li><code>_phytium_mci_map</code> - Virtual to physical address translation (DMA only)</li>
+<li><code>_phytium_mci_flush</code> - Cache clean operation</li>
+<li><code>_phytium_mci_invalidate</code> - Cache invalidate operation</li>
+</ul>
+</div></details></section></div></main></body></html>

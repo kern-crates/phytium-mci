@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="phytium-mci"><title>phytium_mci - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-069232aa.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="phytium_mci" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (898aff704 2025-08-14)" data-channel="nightly" data-search-js="search-281b7574.js" data-settings-js="settings-5514c975.js" ><script src="../static.files/storage-68b7e25d.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-eebb9057.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../phytium_mci/index.html">phytium_<wbr>mci</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#phytium-mci" title="phytium-mci">phytium-mci</a><ul><li><a href="#overview" title="Overview">Overview</a></li><li><a href="#features" title="Features">Features</a></li><li><a href="#architecture" title="Architecture">Architecture</a></li><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#platform-integration" title="Platform Integration">Platform Integration</a></li><li><a href="#hardware-configuration" title="Hardware Configuration">Hardware Configuration</a></li><li><a href="#example" title="Example">Example</a></li></ul></li></ul><h3><a href="#modules-1">Crate Items</a></h3><ul class="block"><li><a href="#modules-1" title="Modules">Modules</a></li><li><a href="#macros" title="Macros">Macros</a></li><li><a href="#traits" title="Traits">Traits</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>phytium_mci</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/phytium_mci/lib.rs.html#1-323">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="phytium-mci"><a class="doc-anchor" href="#phytium-mci">§</a>phytium-mci</h2>
+<p>A <code>no_std</code> SD/MMC host controller driver for Phytium E2000 series SoCs.</p>
+<h3 id="overview"><a class="doc-anchor" href="#overview">§</a>Overview</h3>
+<p>This crate provides a comprehensive driver for SD/MMC cards on Phytium platforms,
+supporting both SD and eMMC cards with DMA and PIO transfer modes.</p>
+<h3 id="features"><a class="doc-anchor" href="#features">§</a>Features</h3>
+<ul>
+<li><strong>Full SD Specification Support</strong>: SDSC, SDHC, SDXC (versions 1.0-3.0)</li>
+<li><strong>eMMC Support</strong>: MMC protocol implementation</li>
+<li><strong>Flexible Transfer Modes</strong>: DMA (high-performance) and PIO (simple)</li>
+<li><strong>Voltage Support</strong>: 3.3V (default) and 1.8V (UHS-I modes)</li>
+<li><strong>Bus Widths</strong>: 1-bit, 4-bit, and 8-bit (eMMC) data bus</li>
+<li><strong>High-Speed Modes</strong>: SDR12, SDR25, SDR50, SDR104, DDR50</li>
+<li><strong>Clock Speed</strong>: From 400 KHz to 208 MHz</li>
+<li><strong>Card Detection</strong>: GPIO-based and host-based</li>
+<li><strong>Interrupt Support</strong>: Command, data, and card detection interrupts</li>
+</ul>
+<h3 id="architecture"><a class="doc-anchor" href="#architecture">§</a>Architecture</h3>
+<p>The driver is organized into distinct layers:</p>
+<div class="example-wrap"><pre class="language-text"><code>Application Layer    (SdCard, MCIHost - High-level API)
+       ↓
+Protocol Layer       (Command/Data transfer, Card initialization)
+       ↓
+Hardware Abstraction (Register access, DMA/PIO control)
+       ↓
+Hardware Support     (IoPad pin configuration, OSA memory/timing)</code></pre></div><h3 id="modules"><a class="doc-anchor" href="#modules">§</a>Modules</h3>
+<ul>
+<li><a href="iopad/index.html" title="mod phytium_mci::iopad"><code>iopad</code></a> - I/O pad configuration for pin multiplexing</li>
+<li><a href="mci/index.html" title="mod phytium_mci::mci"><code>mci</code></a> - Hardware controller driver (register access, DMA/PIO, interrupts)</li>
+<li><a href="mci_host/index.html" title="mod phytium_mci::mci_host"><code>mci_host</code></a> - Host controller protocol layer (SD/MMC protocol)</li>
+<li><a href="osa/index.html" title="mod phytium_mci::osa"><code>osa</code></a> - OS abstraction layer (memory management, event flags)</li>
+</ul>
+<h3 id="platform-integration"><a class="doc-anchor" href="#platform-integration">§</a>Platform Integration</h3>
+<p>To use this driver, you must implement the <a href="trait.Kernel.html" title="trait phytium_mci::Kernel"><code>Kernel</code></a> trait to provide
+platform-specific functionality:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>phytium_mci::{Kernel, set_impl};
+<span class="kw">use </span>core::{ptr::NonNull, time::Duration};
+
+<span class="kw">struct </span>MyPlatform;
+
+<span class="kw">impl </span>Kernel <span class="kw">for </span>MyPlatform {
+    <span class="kw">fn </span>sleep(duration: Duration) {
+        <span class="comment">// Platform-specific delay implementation
+    </span>}
+
+    <span class="attr">#[cfg(feature = <span class="string">"dma"</span>)]
+    </span><span class="kw">fn </span>mmap(virt_addr: NonNull&lt;u8&gt;) -&gt; u64 {
+        <span class="comment">// Virtual to physical address translation
+    </span>}
+
+    <span class="kw">fn </span>flush(addr: NonNull&lt;u8&gt;, size: usize) {
+        <span class="comment">// Cache clean for DMA
+    </span>}
+
+    <span class="kw">fn </span>invalidate(addr: NonNull&lt;u8&gt;, size: usize) {
+        <span class="comment">// Cache invalidate for DMA
+    </span>}
+}
+
+<span class="comment">// Register your implementation
+</span><span class="macro">set_impl!</span>(MyPlatform);</code></pre></div>
+<h3 id="hardware-configuration"><a class="doc-anchor" href="#hardware-configuration">§</a>Hardware Configuration</h3>
+<p>Target Hardware:</p>
+<ul>
+<li><strong>SoC</strong>: Phytium E2000 series (ARMv8-A)</li>
+<li><strong>Board</strong>: Phytium Pi development board</li>
+<li><strong>Controller</strong>: Phytium SDIF (Synopsys DesignWare-based)</li>
+<li><strong>MCI0 Base</strong>: 0x2800_1000</li>
+<li><strong>MCI1 Base</strong>: 0x2800_2000</li>
+<li><strong>IOPAD Base</strong>: 0x2800_0000</li>
+</ul>
+<h3 id="example"><a class="doc-anchor" href="#example">§</a>Example</h3>
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>phytium_mci::{sd::SdCard, IoPad};
+<span class="kw">use </span>core::ptr::NonNull;
+
+<span class="comment">// Initialize IOPAD
+</span><span class="kw">let </span>iopad = <span class="kw">unsafe </span>{ IoPad::new(NonNull::new_unchecked(<span class="number">0x2800_0000 </span><span class="kw">as </span><span class="kw-2">*mut </span>u8)) };
+
+<span class="comment">// Create SD card instance
+</span><span class="kw">let </span><span class="kw-2">mut </span>sdcard = <span class="kw">unsafe </span>{
+    SdCard::new(
+        NonNull::new_unchecked(<span class="number">0x2800_1000 </span><span class="kw">as </span><span class="kw-2">*mut </span>u8),
+        iopad
+    )
+};
+
+<span class="comment">// Initialize the card
+</span>sdcard.init(NonNull::new_unchecked(<span class="number">0x2800_1000 </span><span class="kw">as </span><span class="kw-2">*mut </span>u8))<span class="question-mark">?</span>;
+
+<span class="comment">// Read blocks
+</span><span class="kw">let </span><span class="kw-2">mut </span>buffer = Vec::new();
+sdcard.read_blocks(<span class="kw-2">&amp;mut </span>buffer, <span class="number">0</span>, <span class="number">1</span>)<span class="question-mark">?</span>;</code></pre></div>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt><code>pub use <a class="mod" href="iopad/index.html" title="mod phytium_mci::iopad">iopad</a>::*;</code></dt><dt><code>pub use <a class="mod" href="mci_host/index.html" title="mod phytium_mci::mci_host">mci_host</a>::*;</code></dt></dl><h2 id="modules-1" class="section-header">Modules<a href="#modules-1" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="iopad/index.html" title="mod phytium_mci::iopad">iopad</a></dt><dd>I/O Pad (IOPAD) configuration for Phytium SoCs.</dd><dt><a class="mod" href="mci/index.html" title="mod phytium_mci::mci">mci</a></dt><dd>MCI (Memory Card Interface) hardware controller driver.</dd><dt><a class="mod" href="mci_host/index.html" title="mod phytium_mci::mci_host">mci_<wbr>host</a></dt><dd>MMC/SD Host Controller Protocol Layer.</dd><dt><a class="mod" href="osa/index.html" title="mod phytium_mci::osa">osa</a></dt><dd>OS Abstraction Layer (OSA).</dd></dl><h2 id="macros" class="section-header">Macros<a href="#macros" class="anchor">§</a></h2><dl class="item-table"><dt><a class="macro" href="macro.BitsOpsForU32.html" title="macro phytium_mci::BitsOpsForU32">Bits<wbr>OpsFor<wbr>U32</a></dt><dd>Implements bitwise operations between a flag type and <code>u32</code>.</dd><dt><a class="macro" href="macro.X_REG0.html" title="macro phytium_mci::X_REG0">X_REG0</a></dt><dd>Macro to define a REG0 type register.</dd><dt><a class="macro" href="macro.X_REG1.html" title="macro phytium_mci::X_REG1">X_REG1</a></dt><dd>Macro to define a REG1 type register.</dd><dt><a class="macro" href="macro.genmask.html" title="macro phytium_mci::genmask">genmask</a></dt><dd>Creates a contiguous bitmask starting at bit position <code>l</code> and ending at position <code>h</code>.</dd><dt><a class="macro" href="macro.genmask_ull.html" title="macro phytium_mci::genmask_ull">genmask_<wbr>ull</a></dt><dd>Creates a contiguous bitmask for 64-bit values.</dd><dt><a class="macro" href="macro.get_reg32_bits.html" title="macro phytium_mci::get_reg32_bits">get_<wbr>reg32_<wbr>bits</a></dt><dd>Extracts a bit field from a 32-bit register value.</dd><dt><a class="macro" href="macro.set_impl.html" title="macro phytium_mci::set_impl">set_<wbr>impl</a></dt><dd>Register a platform-specific implementation of the <a href="trait.Kernel.html" title="trait phytium_mci::Kernel"><code>Kernel</code></a> trait.</dd><dt><a class="macro" href="macro.set_reg32_bits.html" title="macro phytium_mci::set_reg32_bits">set_<wbr>reg32_<wbr>bits</a></dt><dd>Prepares a value to be written to a bit field in a 32-bit register.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.Kernel.html" title="trait phytium_mci::Kernel">Kernel</a></dt><dd>Platform abstraction trait for phytium-mci driver.</dd></dl></section></div></main></body></html>
